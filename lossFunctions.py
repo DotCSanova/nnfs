@@ -29,6 +29,21 @@ class Loss_CategoricalCrossentropy(Loss):
         negative_log_likelihoods = -np.log(correct_confidences)
 
         return negative_log_likelihoods
+    
+    def backward(self, dvalues, y_true):
+
+        samples = len(dvalues)
+        labels = len(dvalues[0])
+
+        if len(y_true.shape) == 1:
+
+            y_true = np.eye(labels)[y_true]
+        
+        self.dinputs = -y_true / dvalues
+        self.dinputs = self.dinputs / samples #Normalizar de cara a la optimización posterior, ya que los optimizadores sumarán todos los gradientes, de esta forma no somos dependientes del numero de muestras
+        
+
+
             
         
 
